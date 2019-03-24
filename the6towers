@@ -6,6 +6,9 @@ import pygame
 
 # game refers to the game state. state refers to the entire program state.
 
+# 60 frame/s
+FPS = 60
+
 
 class GameObject(abc.ABC):
     """An object in the game world."""
@@ -38,21 +41,35 @@ class State:
     Includes the game state, user interface stuff, and anything else that needs
     to be displayed to the user.
     """
-    __slots__ = 'game'
+    __slots__ = 'exit', 'game', 'surface'
 
-    def __init__(self):
+    def __init__(self, surface):
+        # Main display surface
+        self.surface = surface
+        # Game state
         self.game = None
+        # If True, it's time to exit.
+        self.exit = False
 
 
 def do_events(state):
+    """Look at all events and modify state accordingly."""
     for event in pygame.event.get():
-        pass
+        # To exit the game, hit Esc or close the window.
+        if (event.type is pygame.QUIT
+            or event.type is pygame.KEYDOWN and event.key is pygame.K_ESCAPE
+        ):
+            state.exit = True
 
 
 def main():
-    state = State()
-    while True:
+    clock = pygame.time.Clock()
+    # 4:3 aspect ratio
+    state = State(pygame.display.set_mode((1332, 999)))
+    while not state.exit:
+        clock.tick(FPS)
         do_events(state)
+        pygame.display.update()
 
 
 pygame.init()
