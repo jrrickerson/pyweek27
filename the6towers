@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+
+import abc
+
+import pygame
+
+# game refers to the game state. state refers to the entire program state.
+
+
+class GameObject(abc.ABC):
+    """An object in the game world."""
+    __slots__ = ()
+
+    # This method might not make sense in a turn-based game.
+    @abc.abstractmethod
+    def update(self):
+        """Mutate the object as needed for one frame of game time."""
+
+    @abc.abstractmethod
+    def draw(self, surface):
+        """Draw the object where it needs to be on surface."""
+
+
+class GameState(GameObject):
+    """Contains all data relating to the rules of the game."""
+    __slots__ = ()
+
+    def update(self):
+        pass
+
+    def draw(self, surface):
+        """Draw the background and all the game objects."""
+
+
+class State:
+    """Contains most of the program state.
+
+    Includes the game state, user interface stuff, and anything else that needs
+    to be displayed to the user.
+    """
+    __slots__ = 'game'
+
+    def __init__(self):
+        self.game = None
+
+
+def do_events(state):
+    for event in pygame.event.get():
+        pass
+
+
+def main():
+    state = State()
+    while True:
+        do_events(state)
+
+
+pygame.init()
+if __name__ == '__main__':
+    main()
