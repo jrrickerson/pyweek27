@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
 import abc
+import enum
 
 import pygame
 
 # game refers to the game state. state refers to the entire program state.
+
+MAGIC_NUMBER = 6
 
 # 60 frame/s
 FPS = 60
@@ -50,6 +53,33 @@ class State:
         self.game = None
         # If True, it's time to exit.
         self.exit = False
+
+
+class Element(enum.IntEnum):
+    """This class represents the 6 elements of the game.
+
+    One of the elements is 0, so we can use '%' with this type. That value is
+    not special, and is considered truthy, like any other object.
+    """
+    DARK = enum.auto()
+    LIGHT = enum.auto()
+    EARTH = enum.auto()
+    AIR = enum.auto()
+    WATER = enum.auto()
+    FIRE = enum.auto()
+
+    def _generate_next_value_(name, start, count, last_values):
+        """Start the values at 0, not 1."""
+        return count
+
+    def __bool__(self):
+        return True
+
+    def multiplier(self, target):
+        """The damage adjustment for when a unit of this element attacks a unit
+        of the target element. It ranges from 1 to 2, inclusive.
+        """
+        return (self - target) % MAGIC_NUMBER / (MAGIC_NUMBER - 1) + 1
 
 
 def do_events(state):
