@@ -81,6 +81,27 @@ class Element(enum.IntEnum):
         """
         return (self - target) % MAGIC_NUMBER / (MAGIC_NUMBER - 1) + 1
 
+    @property
+    def color(self):
+        """The color that corresponds to this element."""
+        return ELEMENT_COLORS[self]
+
+
+ELEMENT_COLORS = {
+    # Black
+    Element.DARK: (0, 0, 0),
+    # White
+    Element.LIGHT: (255, 255, 255),
+    # Brown
+    Element.EARTH: (150, 75, 0),
+    # Yellow
+    Element.AIR: (255, 255, 0),
+    # Blue
+    Element.WATER: (0, 0, 255),
+    # Red
+    Element.FIRE: (255, 0, 0),
+}
+
 
 def do_events(state):
     """Look at all events and modify state accordingly."""
