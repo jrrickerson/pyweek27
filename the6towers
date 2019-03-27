@@ -7,7 +7,13 @@ import pygame
 
 # game refers to the game state. state refers to the entire program state.
 
+# We use a hex grid. The field is a 21x21 hexagon. Dimensions are odd so we can
+# put the base in the middle.
+
 MAGIC_NUMBER = 6
+
+CELL_SIZE = 32
+FIELD_SIZE = 21
 
 # 60 frame/s
 FPS = 60
@@ -44,15 +50,19 @@ class State:
     Includes the game state, user interface stuff, and anything else that needs
     to be displayed to the user.
     """
-    __slots__ = 'exit', 'game', 'surface'
+    __slots__ = 'exit', 'game', 'window'
 
-    def __init__(self, surface):
+    def __init__(self, window):
         # Main display surface
-        self.surface = surface
+        self.window = window
         # Game state
-        self.game = None
+        self.game = GameState()
         # If True, it's time to exit.
         self.exit = False
+
+    def draw(self):
+        """Draw the main window."""
+        self.game.draw(self.window)
 
 
 class Element(enum.IntEnum):
@@ -116,10 +126,17 @@ def do_events(state):
 def main():
     clock = pygame.time.Clock()
     # 4:3 aspect ratio
-    state = State(pygame.display.set_mode((1332, 999)))
+    state = State(
+        pygame.display.set_mode(
+            (CELL_SIZE * FIELD_SIZE, CELL_SIZE * FIELD_SIZE),
+        ),
+    )
     while not state.exit:
         clock.tick(FPS)
         do_events(state)
+
+        # Draw the window.
+        state.draw()
         pygame.display.update()
 
 
