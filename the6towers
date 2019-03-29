@@ -24,9 +24,9 @@ FPS = 60
 
 
 def is_hi_column(n):
-    """Return True n has the same even/odd status as BASE_PLACE.
+    """Return True if n has the same even/odd status as BASE_PLACE.
 
-    Use this for placing the hex colomns properly.
+    Use this for placing the hex columns properly.
     """
     return n % 2 == BASE_PLACE % 2
 
@@ -47,6 +47,8 @@ class GameObject(abc.ABC):
 
 @dataclass
 class Cell(GameObject):
+    __slots__ = 'x', 'y'
+
     x: int
     y: int
 
@@ -187,7 +189,6 @@ def do_events(state):
 
 def main():
     clock = pygame.time.Clock()
-    # 4:3 aspect ratio
     state = State(
         pygame.display.set_mode(
             (Cell.SIZE * FIELD_SIZE, Cell.SIZE * FIELD_SIZE),
