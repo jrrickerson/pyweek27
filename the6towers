@@ -22,6 +22,8 @@ FIELD_SIZE = BASE_PLACE * 2 + 1
 # 60 frame/s
 FPS = 60
 
+GRAY = 128, 128, 128
+
 
 def is_hi_column(n):
     """Return True if n has the same even/odd status as BASE_PLACE.
@@ -96,7 +98,10 @@ def all_cells():
 
 class GameState(GameObject):
     """Contains all data relating to the rules of the game."""
-    __slots__ = ()
+    __slots__ = 'base'
+
+    def __init__(self):
+        self.base = Base()
 
     def update(self):
         pass
@@ -105,6 +110,7 @@ class GameState(GameObject):
         """Draw the background and all the game objects."""
         for c in all_cells():
             c.draw(surface)
+        self.base.draw(surface)
 
 
 class State:
@@ -175,6 +181,32 @@ ELEMENT_COLORS = {
     # Red
     Element.FIRE: (255, 0, 0),
 }
+
+
+class Base(GameObject):
+    """The player's base in the middle of the screen."""
+    __slots__ = 'hp'
+
+    def __init__(self):
+        self.hp = 10
+
+    def draw(self, surface):
+        rect = Cell(BASE_PLACE, BASE_PLACE).rect
+        side = Cell.SIZE
+        half = side // 2
+        pygame.draw.polygon(
+            surface,
+            GRAY,
+            (
+                (half + rect.x, rect.y),
+                (side + rect.x, half + rect.y),
+                (half + rect.x, side + rect.y),
+                (rect.x, half + rect.y),
+            ),
+        )
+
+    def update(self):
+        pass
 
 
 def do_events(state):
