@@ -75,9 +75,7 @@ class Cell(GameObject):
     def draw(self, surface):
         """Draw the cell as a green square with a transparent white border."""
         pygame.draw.rect(surface, (0, 100, 0), self.rect)
-        # I think we have to do something special to the surface to make the
-        # alpha work.
-        pygame.draw.rect(surface, (255, 255, 255, 100), self.rect, 1)
+        pygame.draw.rect(surface, (0, 255, 0), self.rect, 1)
 
 
 def column_cells(x):
