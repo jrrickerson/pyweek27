@@ -188,12 +188,10 @@ ELEMENT_COLORS = {
 }
 
 
+@dataclass
 class Base(GameObject):
     """The player's base in the middle of the screen."""
-    __slots__ = 'hp'
-
-    def __init__(self):
-        self.hp = 10
+    hp: int = 10
 
     def draw(self, surface):
         rect = Cell(BASE_PLACE, BASE_PLACE).rect
@@ -214,6 +212,41 @@ class Base(GameObject):
     def update(self):
         pass
 
+
+@dataclass
+class Source(GameObject):
+    """A location that enemies come from.
+
+    It has an element and a position. Its position should be at one vertex of
+    the field.
+    """
+    __slots__ = 'element', 'cell'
+
+    def __init__(self, element, cell):
+        self.element = element
+        self.cell = Cell(*cell)
+
+    def update(self):
+        pass
+
+    def draw(self, surface):
+        rect = self.cell.rect
+        pygame.draw.polygon(
+            surface,
+            self.element.color,
+            (rect.midtop, rect.bottomright, rect.bottomleft),
+        )
+
+
+SOURCE_PLACES = (
+    (BASE_PLACE, 0),
+    (FIELD_SIZE - 1, BASE_PLACE // 2),
+    (FIELD_SIZE - 1, BASE_PLACE * 3 // 2),
+    (BASE_PLACE, FIELD_SIZE - 1),
+    (0, BASE_PLACE * 3 // 2),
+    (0, BASE_PLACE // 2),
+)
+SOURCES = tuple(Source(e, c) for e, c in zip(Element, SOURCE_PLACES))
 
 def do_events(state):
     """Look at all events and modify state accordingly."""
@@ -238,6 +271,8 @@ def main():
 
         # Draw the window.
         state.draw()
+        for s in SOURCES:
+            s.draw(state.window)
         pygame.display.update()
 
 
