@@ -23,6 +23,9 @@ FIELD_SIZE = BASE_PLACE * 2 + 1
 FPS = 60
 
 GRAY = 128, 128, 128
+WHITE = 255, 255, 255
+
+pygame.init()
 
 
 def is_hi_column(n):
@@ -55,7 +58,7 @@ class Cell(GameObject):
     y: int
 
     # Size of a cell in pixels.
-    SIZE = 32
+    SIZE = 64
 
     @property
     def rect(self):
@@ -76,6 +79,10 @@ class Cell(GameObject):
         """Draw the cell as a green square with a transparent white border."""
         pygame.draw.rect(surface, (0, 100, 0), self.rect)
         pygame.draw.rect(surface, (0, 255, 0), self.rect, 1)
+
+
+# We'll use this until we find a need for more than one font.
+FONT = pygame.font.Font(pygame.font.get_default_font(), Cell.SIZE // 4)
 
 
 def column_cells(x):
@@ -202,6 +209,7 @@ class Base(GameObject):
                 (rect.x, half + rect.y),
             ),
         )
+        surface.blit(FONT.render(str(self.hp), True, WHITE), rect)
 
     def update(self):
         pass
@@ -233,6 +241,5 @@ def main():
         pygame.display.update()
 
 
-pygame.init()
 if __name__ == '__main__':
     main()
